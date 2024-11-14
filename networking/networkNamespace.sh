@@ -48,22 +48,7 @@ ip netns exec web-ns ping 192.168.15.6
 
 ip netns exec db-ns ping 192.168.15.5
 
-----
-# 9. add route in the namaspaces to enable the reachability to outside...
-ip netns exec web-ns ip route add 192.168.0.0/24 via 192.168.15.1
-# check...
-ip netns exec web-ns route
-
-ip netns exec db-ns ip route add 192.168.0.0/24 via 192.168.15.1
-# check...
-ip netns exec db-ns route
-
-# 10. add iptables rule to enable NAT, so that it will receive the ping's response...
-iptables -t nat -A POSTROUTING -s 192.168.15.0/24 -j MASQUERADE
-# check...
-iptables -t nat -L -v
-
-# 11. enable internet in the namespace's interface.
+# 9. enable internet in the namespace's interface.
 ip netns exec web-ns ip route add default via 192.168.15.1
 # check...
 ip netns exec web-ns ip route
@@ -73,3 +58,10 @@ ip netns exec db-ns ip route add default via 192.168.15.1
 # check...
 ip netns exec db-ns ip route
 ip netns exec db-ns ping 8.8.8.8
+
+# 10. add iptables rule to enable NAT, so that it will receive the ping's response...
+iptables -t nat -A POSTROUTING -s 192.168.15.0/24 -j MASQUERADE
+# check...
+iptables -t nat -L -v
+
+
